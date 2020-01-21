@@ -1,39 +1,43 @@
 import Foundation
 
-protocol FileLinerProtocol {
-    func readLine() -> String?
-    var hasLinesToRead: Bool { get }
-}
-
-class FileLiner: FileLinerProtocol {
-    private let file: FileHandle
+public final class FileLiner: FileLinerProtocol {
+    private let handler: FileHandle
     private let delimiterData: Data
-    private let chunk = 1024
+    private let chunk: Int
     private let delimiterChar: Character
     private var buffer: Data
     private var endOfFile = false
 
-    init?(path: String, delimiter: String = "\n") {
-        guard let file = FileHandle(forReadingAtPath: path),
-            let delimiterData = delimiter.data(using: .utf8)
-            else { return nil }
+    public init(path: String, delimiter: String, chunk: Int) throws {
+        guard let delimiterData = delimiter.data(using: .utf8) else {
+            throw FileLinerError.invalidDelimiter
+        }
 
-        self.file = file
+        guard let handler = FileHandle(forReadingAtPath: path) else {
+            throw FileLinerError.fileNotExist
+        }
+
+        self.handler = handler
         self.delimiterData = delimiterData
+        self.chunk = chunk
         buffer = Data(capacity: chunk)
         delimiterChar = Character(delimiter)
     }
 
-    deinit {
-        file.closeFile()
+    convenience public init(path: String) throws {
+        try self.init(path: path, delimiter:Defaults.delimiter, chunk:Defaults.chunk)
     }
 
-    var hasLinesToRead: Bool {
+    deinit {
+        handler.closeFile()
+    }
+
+    public var hasLinesToRead: Bool {
         !endOfFile
     }
 
-    func readLine() -> String? {
-        let tempData = file.readData(ofLength: chunk)
+    public func readLine() -> String? {
+        let tempData = handler.readData(ofLength: chunk)
         buffer.append(tempData)
 
         let range = buffer.range(of: delimiterData)
