@@ -9,7 +9,9 @@ public final class FileLiner: FileLinerProtocol {
     private var endOfFile = false
 
     public init(path: String, delimiter: String, chunk: Int) throws {
-        guard let delimiterData = delimiter.data(using: .utf8) else {
+        guard let delimiterCharacter = delimiter.unicodeScalars.first,
+            CharacterSet.newlines.contains(delimiterCharacter) != false,
+            let delimiterData = delimiter.data(using: .utf8) else {
             throw FileLinerError.invalidDelimiter
         }
 
