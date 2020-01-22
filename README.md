@@ -3,7 +3,7 @@ This Swift package helps you read a file line by line.
 
 ## Installation
 
-## Swift Package Manager
+### Swift Package Manager
 
 ```swift
 .package(url: "https://github.com/ethemozcan/FileLiner.git", .upToNextMinor(from: "1.0.0"))
