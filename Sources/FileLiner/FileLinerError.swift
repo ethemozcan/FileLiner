@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum FileLinerError: Error {
+public enum FileLinerError: Error {
     case invalidDelimiter
     case fileNotExist
 }
