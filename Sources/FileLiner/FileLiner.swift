@@ -19,6 +19,10 @@ public final class FileLiner: FileLinerProtocol {
             throw FileLinerError.fileNotExist
         }
 
+        if chunk < Defaults.chunk {
+            throw FileLinerError.invalidChunk
+        }
+
         self.handler = handler
         self.delimiterData = delimiterData
         self.chunk = chunk

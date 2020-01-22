@@ -18,7 +18,7 @@ final class FileLinerTests: XCTestCase {
     }
 
     func testReadWithSmallChunks() {
-        let reader = try! FileLiner(path: path, delimiter: "\n", chunk: 20)
+        let reader = try! FileLiner(path: path, delimiter: "\n", chunk: 1024)
 
         let line1 = reader.readLine()
         let line2 = reader.readLine()
@@ -31,7 +31,7 @@ final class FileLinerTests: XCTestCase {
     }
 
     func testReadWithLargeChunks() {
-        let reader = try! FileLiner(path: path, delimiter: "\n", chunk: 4096)
+        let reader = try! FileLiner(path: path, delimiter: "\n", chunk: 65536)
 
         let line1 = reader.readLine()
         let line2 = reader.readLine()
@@ -45,12 +45,23 @@ final class FileLinerTests: XCTestCase {
 
     func testInvalidDelimiter() {
         do {
-            let _ = try FileLiner(path: path, delimiter: "\\", chunk: 1024)
+            let _ = try FileLiner(path: path, delimiter: "\\n", chunk: 1024)
             XCTAssert(false, "Can't handle invalid delimiter")
         } catch FileLinerError.invalidDelimiter {
             XCTAssert(true)
         } catch {
             XCTAssert(false, "Can't handle invalid delimiter")
+        }
+    }
+
+    func testInvalidChunk() {
+        do {
+            let _ = try FileLiner(path: path, delimiter: "\n", chunk: -1024)
+            XCTAssert(false, "Invalid chunk")
+        } catch FileLinerError.invalidChunk {
+            XCTAssert(true)
+        } catch {
+            XCTAssert(false, "Invalid chunk")
         }
     }
 }

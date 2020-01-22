@@ -8,6 +8,7 @@
 import Foundation
 
 public enum FileLinerError: Error {
+    case invalidChunk
     case invalidDelimiter
     case fileNotExist
 }
