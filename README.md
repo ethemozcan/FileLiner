@@ -9,6 +9,14 @@ This Swift package helps you read a file line by line.
 .package(url: "https://github.com/ethemozcan/FileLiner.git", .upToNextMinor(from: "1.0.0"))
 ```
 
+### Cococapods
+
+```swift
+target 'YourApp' do
+  pod 'FileLiner', '~> 1.0'
+end
+```
+
 ## Usage
 
 ```swift
